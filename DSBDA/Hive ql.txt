@@ -1,0 +1,86 @@
+create database mydb2;
+
+use mydb2;
+
+create table flight(fno int,year int, dest varchar(10), delay float);
+
+alter table flight rename to air_flight;
+
+alter table air_flight add columns(source varchar(10));
+
+drop table flight;
+
+desc air_flight;
+
+create table flight(fno int, year int, dest varchar(10), delay float)
+row format delimited 
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+insert into flight values(123,2009, "mumbai",30.6);
+
+insert into flight values(124,2008,"pune",50.6);
+
+select * from flight;
+
+## enter this command in terminal 
+
+gedit f.txt
+
+# After f.txt is opened , enter 
+
+923,2009,navi mumbai,60.0
+156,2009,kolhapur,78.0
+112,2009,pune,0.0
+322,2008,nagpur,90.0
+132,2008,aurangabad,67.0
+
+## After saving this file 
+Open terminal
+and enter 
+
+
+pwd ## for current directory
+
+ls ## list all the files in current directory
+
+## Go in the hive cli and enter 
+
+load data local inpath "f.txt"
+overwrite into table flight;
+
+
+select * from flight;
+
+create table nflight(fno int, year int, source varchar(10))
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+select *from flight;
+
+insert into nflight values(923,2009,"pune");
+
+select a.fno, a.year, a.dest, a.delay, b.source
+from flight a join nflight b 
+on(a.fno=b.fno);
+
+select* from nflight;
+
+select* from flight;
+
+create index flight_index on table flight(fno)
+as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+WITH DEFERRED REBUILD;
+
+show tables;
+
+
+
+
+
+
+
+
